@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pour ma petite sœur</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@500;700&display=swap">
+<style>
+/* Layout: one centered love-note card on a soft pink ground, hearts drifting up behind it. Single deliberate pink theme. */
+:root{
+  --ground:#ffe3ef; --ground2:#ffc2dc; --card:#fff6fa;
+  --ink:#8a1f5c; --rose:#ff3d8f; --soft:#c75c96;
+  --script:"Great Vibes","Brush Script MT",cursive;
+  --body:"Quicksand","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at 50% 30%,var(--ground),var(--ground2));background-color:var(--ground);color:var(--ink);font-family:var(--body);overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+main{position:relative;min-height:100%;display:grid;place-items:center;padding-inline:16px;padding-block:24px;box-sizing:border-box}
+.card{background:var(--card);border:3px solid #ffb3d1;border-radius:32px;max-width:30rem;width:100%;padding:2.5rem 1.5rem 2rem;text-align:center;box-shadow:0 18px 50px rgba(255,61,143,.25);box-sizing:border-box;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
+.heart{font-size:3.2rem;color:var(--rose);display:inline-block;animation:beat 1.2s ease-in-out infinite}
+.lead{font-size:.95rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:.6rem 0 0;font-weight:700}
+h1{font-family:var(--script);font-weight:400;font-size:clamp(2.6rem,11vw,3.8rem);line-height:1.15;margin:.6rem 0 .4rem;color:var(--rose);text-wrap:balance}
+.sub{font-size:1.15rem;margin:0;font-weight:500}
+.sign{margin-top:1.6rem;font-family:var(--script);font-size:2rem;color:var(--ink)}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
+@keyframes pop{from{transform:scale(.85)}to{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.heart,.card{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<main>
+  <div class="card">
+    <span class="heart" aria-hidden="true">♥</span>
+    <p class="lead">Un petit message pour toi</p>
+    <h1>Je t'aime ma petite sœur chérie d'amour</h1>
+    <p class="sub">Tu comptes énormément pour moi.</p>
+    <div class="sign">♥ ♥ ♥</div>
+  </div>
+</main>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');let W,H,hs=[];
+function rs(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio}
+addEventListener('resize',rs);rs();
+const cols=['#ff3d8f','#ff8fbf','#ffb3d1','#e05aa8','#ffffff'];
+function mk(y){return{x:Math.random()*W,y:y??H+40,s:(8+Math.random()*18)*devicePixelRatio,v:(.4+Math.random())*devicePixelRatio,w:Math.random()*6,c:cols[Math.random()*cols.length|0],a:.4+Math.random()*.5}}
+for(let i=0;i<40;i++)hs.push(mk(Math.random()*H));
+function heart(h){x.save();x.translate(h.x+Math.sin(h.w)*10,h.y);x.scale(h.s/16,h.s/16);x.globalAlpha=h.a;x.fillStyle=h.c;x.beginPath();x.moveTo(0,4);x.bezierCurveTo(0,0,-8,-2,-8,4);x.bezierCurveTo(-8,9,0,13,0,16);x.bezierCurveTo(0,13,8,9,8,4);x.bezierCurveTo(8,-2,0,0,0,4);x.fill();x.restore()}
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function f(){x.clearRect(0,0,W,H);hs.forEach((h,i)=>{if(!still){h.y-=h.v;h.w+=.02}if(h.y<-40)hs[i]=mk();heart(h)});if(!still)requestAnimationFrame(f)}
+f();
+</script>
+</body>
+</html>
